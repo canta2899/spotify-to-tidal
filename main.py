@@ -1,23 +1,45 @@
-from dotenv import load_dotenv
-import os
-
 from spotify_scanner import SpotifyScanner
+from tidal_updater import TidalUpdater
+from dotenv import load_dotenv
+import sys
+import os
 
 load_dotenv()
 
-client_id: str | None = os.getenv("SPOTIPY_CLIENT_ID")
-client_secret: str | None = os.getenv("SPOTIPY_CLIENT_SECRET")
-redirect_uri: str | None = os.getenv("SPOTIPY_REDIRECT_URI")
-scope: str | None = os.getenv("SPOTIPY_CLIENT_SCOPE")
+CLIENT_ID: str = os.getenv("SPOTIPY_CLIENT_ID") or ""
+CLIENT_SECRET: str = os.getenv("SPOTIPY_CLIENT_SECRET") or ""
+REDIRECT_URI: str = os.getenv("SPOTIPY_REDIRECT_URI") or ""
+SCOPE: str = os.getenv("SPOTIPY_CLIENT_SCOPE") or ""
 
-sc: SpotifyScanner = SpotifyScanner(
-    client_id, 
-    client_secret, 
-    redirect_uri,
-    scope)
+def run_conversion(spotify_playlist: str, tidal_playlist: str):
+    sc: SpotifyScanner = SpotifyScanner(
+        CLIENT_ID, 
+        CLIENT_SECRET, 
+        REDIRECT_URI,
+        SCOPE)
 
-sc.login()
+    sc.login()
+    sc.lookup(playlist=spotify_playlist)
 
-sc.lookup()
+    tracks: dict[str, str] = sc.get_tracks()
 
-sc.save_file()
+    td: TidalUpdater = TidalUpdater()
+    td.login()
+    tids: list[str] = list()
+    for track in tracks:
+        res: str | None = td.search_track(
+            title=track["title"],
+            artist=track['artist'])
+        if not res:
+            print(f"Skipped track {track['title']} {track['artist']}")
+            continue
+        tids.append(res)
+            
+    td.add_to_playlist(tidal_playlist, tids)
+    
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Include spotify playlist id and tidal playlist name")
+        os.exit(1)
+    run_conversion(sys.argv[1], " ".join(sys.argv[2:]))
+    
