@@ -2,3 +2,4 @@ env
 .env
 spotify_out.json
 .cache
+__pycache__
