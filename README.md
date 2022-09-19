@@ -38,4 +38,4 @@ Where:
 
 ## Notes
 
-Since Tidal does not allows to search songs by their ISRC some songs might be converted incorrectly. However, if no song is found on tidal the title will be skipped and printed to the command line in order to let you know which songs have not been synchronized.
+Since Tidal does not allow searching songs by their ISRC, some songs might be converted incorrectly. However, if no song is found on tidal the title will be skipped and printed on the command line in order to let you know which songs have not been synchronized.
