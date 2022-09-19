@@ -1,6 +1,7 @@
 env
 .env
 spotify_*.json
+.spotify_*.json
 .cache
 __pycache__
 .vscode

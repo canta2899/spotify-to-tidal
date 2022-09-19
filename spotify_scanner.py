@@ -18,7 +18,7 @@ class SpotifyScanner:
         self.sp: spotipy.Spotify
         self.__query_limit: int = 50
         self.__filecontent: list[dict[str,str]] = []
-        self.filename = lambda x: f"spotify_{x}.json"
+        self.filename = lambda x: f".spotify_{x}.json"
         
     def login(self):
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
