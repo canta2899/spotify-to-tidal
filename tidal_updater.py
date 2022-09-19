@@ -12,7 +12,7 @@ class TidalUpdater:
         self.session.login_oauth_simple()
 
     @staticmethod
-    def __normalize(query: str):
+    def __normalize(query: str) -> str:
         normalized: str
         normalized = ''.join(filter(lambda character:ord(character) < 0xff, query.lower())) 
         normalized = query.split('-')[0].strip().split('(')[0].strip().split('[')[0].strip()
