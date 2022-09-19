@@ -29,11 +29,12 @@ class TidalUpdater:
                     tidal_id = t.id
                     break
             if not tidal_id:
-                tidal_id = res['tracks'][0].id
+                possible_ids = filter(lambda s: song.artist in s.artist.name, res['tracks'])
+                tidal_id = list(possible_ids)[0].id
         except Exception:
             pass
-        finally:
-            return tidal_id
+        
+        return tidal_id
     
     def add_to_playlist(self, playlist_name: str, tids: list[str]):
         playlist = self.session.user.create_playlist(playlist_name, "Songs saved from spotify")

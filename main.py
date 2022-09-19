@@ -22,18 +22,15 @@ def run_conversion(spotify_playlist: str, tidal_playlist: str):
     sc.login()
     sc.lookup(playlist=spotify_playlist)
 
-    tracks: dict[str, str] = sc.get_tracks()
+    tracks: list[Song] = sc.get_tracks()
 
     td: TidalUpdater = TidalUpdater()
     td.login()
     tids: list[str] = list()
-    for track in tracks:
-        title=track["title"]
-        artist=track["artist"]
-        isrc=track["isrc"]
-        res: str | None = td.search_track(Song(title, artist, isrc))
+    for song in tracks:
+        res: str | None = td.search_track(song)
         if not res:
-            print(f"Skipped track {track['title']} {track['artist']}")
+            print(f"Skipped track {song.title} {song.artist}")
             continue
         tids.append(res)
             

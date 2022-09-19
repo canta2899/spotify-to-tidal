@@ -41,7 +41,7 @@ class SpotifyScanner:
             count += 1
         return count
     
-    def get_tracks(self) -> list[dict[str, str]]:
+    def get_tracks(self) -> list[Song]:
         return self.__filecontent
 
     def __load_cached_songs(self, filename: str):
@@ -57,7 +57,7 @@ class SpotifyScanner:
 
     def __cache_songs(self, filename: str):
         with open(filename, "w", encoding="utf-8") as f:
-            content: list[dict[str, str]] = map(self.__get_song_dict, self.__filecontent)
+            content: list[dict[str, str]] = list(map(self.__get_song_dict, self.__filecontent))
             f.write(json.dumps(content))
         
     def lookup(self, override: bool = False, playlist: str = "likes"):
