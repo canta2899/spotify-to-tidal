@@ -34,6 +34,7 @@ class SpotifyScanner:
             entry: dict[str: str] = dict()
             entry["title"]: str = track['name']
             entry["artist"]: str = track["artists"][0]['name']
+            entry["isrc"]: str = track["external_ids"]["isrc"]
             self.__filecontent.append(entry)
             count += 1
         return count

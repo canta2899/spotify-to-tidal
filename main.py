@@ -29,7 +29,8 @@ def run_conversion(spotify_playlist: str, tidal_playlist: str):
     for track in tracks:
         res: str | None = td.search_track(
             title=track["title"],
-            artist=track['artist'])
+            artist=track["artist"],
+            isrc=track["isrc"])
         if not res:
             print(f"Skipped track {track['title']} {track['artist']}")
             continue
