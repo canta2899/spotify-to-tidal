@@ -1,6 +1,7 @@
 from spotify_scanner import SpotifyScanner
 from tidal_updater import TidalUpdater
 from dotenv import load_dotenv
+from song import Song
 import sys
 import os
 
@@ -27,10 +28,10 @@ def run_conversion(spotify_playlist: str, tidal_playlist: str):
     td.login()
     tids: list[str] = list()
     for track in tracks:
-        res: str | None = td.search_track(
-            title=track["title"],
-            artist=track["artist"],
-            isrc=track["isrc"])
+        title=track["title"]
+        artist=track["artist"]
+        isrc=track["isrc"]
+        res: str | None = td.search_track(Song(title, artist, isrc))
         if not res:
             print(f"Skipped track {track['title']} {track['artist']}")
             continue

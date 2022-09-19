@@ -1,6 +1,7 @@
 from typing import Any
 import re
 import tidalapi
+from song import Song
 
 class TidalUpdater:
     
@@ -18,13 +19,13 @@ class TidalUpdater:
         normalized = re.sub(r'\s+', ' ', normalized)
         return normalized
 
-    def search_track(self, title: str, artist: str, isrc: str) -> str | None:
-        query: str = self.__normalize(f"{title} {artist}")
+    def search_track(self, song: Song) -> str | None:
+        query: str = self.__normalize(f"{song.title} {song.artist}")
         res: dict[str, Any] = self.session.search(query)
         tidal_id: str | None = None
         try:
             for t in res['tracks']:
-                if t.isrc == isrc:
+                if t.isrc == song.isrc:
                     tidal_id = t.id
                     break
             if not tidal_id:
