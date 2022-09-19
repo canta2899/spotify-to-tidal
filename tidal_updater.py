@@ -13,22 +13,24 @@ class TidalUpdater:
     @staticmethod
     def __normalize(query: str):
         normalized: str
-        normalized = ''.join(filter(lambda character:ord(character) < 0xff, normalized.lower())) 
-        normalized = normalized.split('-')[0].strip().split('(')[0].strip().split('[')[0].strip()
-        normalized = re.sub(r'\s+', ' ')
+        normalized = ''.join(filter(lambda character:ord(character) < 0xff, query.lower())) 
+        normalized = query.split('-')[0].strip().split('(')[0].strip().split('[')[0].strip()
+        normalized = re.sub(r'\s+', ' ', normalized)
         return normalized
 
     def search_track(self, title: str, artist: str, isrc: str) -> str | None:
         query: str = self.__normalize(f"{title} {artist}")
         res: dict[str, Any] = self.session.search(query)
-        tidal_id: str | None
+        tidal_id: str | None = None
         try:
             for t in res['tracks']:
                 if t.isrc == isrc:
                     tidal_id = t.id
                     break
+            if not tidal_id:
+                tidal_id = res['tracks'][0].id
         except Exception:
-            tidal_id = None
+            pass
         finally:
             return tidal_id
     
