@@ -35,8 +35,16 @@ class TidalUpdater:
             pass
         
         return tidal_id
-    
-    def add_to_playlist(self, playlist_name: str, tids: list[str]):
-        playlist = self.session.user.create_playlist(playlist_name, "Songs saved from spotify")
-        playlist.add(tids)
+
+    def add_to_playlist(self, playlist, tids: list[str]):
         
+        playlist.add(tids)   
+
+    def get_or_create_playlist(self, playlist_name: str):
+
+        for pl in self.session.user.playlists():
+            if pl.name == playlist_name:
+                return pl
+        return self.session.user.create_playlist(playlist_name, "Songs saved from spotify")
+
+   

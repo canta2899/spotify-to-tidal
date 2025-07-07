@@ -17,7 +17,7 @@ class SpotifyScanner:
         self.__redirect_uri: str = redirect_uri
         self.__scope: str = scope
         self.sp: spotipy.Spotify
-        self.__query_limit: int = 50
+        self.__query_limit: int = 100
         self.__filecontent: list[Song] = []
         self.filename = lambda x: f".spotify_{x}.json"
         
@@ -70,9 +70,9 @@ class SpotifyScanner:
         offset: int = 0
         while keeprunning:
             if playlist == "likes":
-                r: Any = self.sp.current_user_saved_tracks(limit=50, offset=offset)
+                r: Any = self.sp.current_user_saved_tracks(limit=self.__query_limit, offset=offset)
             else:
-                r: Any = self.sp.playlist_tracks(playlist)
+                r: Any = self.sp.playlist_tracks(playlist, limit=self.__query_limit, offset=offset)
             count = self.__append_tracks(r)
             keeprunning = count == self.__query_limit
             offset += count
