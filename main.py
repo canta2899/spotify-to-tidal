@@ -11,6 +11,8 @@ CLIENT_ID: str = os.getenv("SPOTIPY_CLIENT_ID") or ""
 CLIENT_SECRET: str = os.getenv("SPOTIPY_CLIENT_SECRET") or ""
 REDIRECT_URI: str = os.getenv("SPOTIPY_REDIRECT_URI") or ""
 SCOPE: str = os.getenv("SPOTIPY_CLIENT_SCOPE") or ""
+batch_size = 100
+
 
 def run_conversion(spotify_playlist: str, tidal_playlist: str):
     sc: SpotifyScanner = SpotifyScanner(
@@ -33,9 +35,11 @@ def run_conversion(spotify_playlist: str, tidal_playlist: str):
             print(f"Skipped track {song.title} {song.artist}")
             continue
         tids.append(res)
-            
-    td.add_to_playlist(tidal_playlist, tids)
-    
+
+    playlist = td.get_or_create_playlist(tidal_playlist)
+    for i in range(0, len(tids), batch_size):
+        td.add_to_playlist(playlist, tids[i:i+batch_size])
+
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Include spotify playlist id and tidal playlist name")
